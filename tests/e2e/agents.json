@@ -1,0 +1,13 @@
+[
+  {
+    "id": "notebook",
+    "alias": "",
+    "mode": "TUNNEL",
+    "sleep_interval": 60,
+    "jitter": 10,
+    "last_seen": "2026-01-10T17:31:55.809707064+07:00",
+    "first_seen": "2026-01-09T23:30:30.497151097+07:00",
+    "ip": "127.0.0.1",
+    "version": "v3"
+  }
+]

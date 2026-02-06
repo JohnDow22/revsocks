@@ -1,0 +1,12 @@
+[
+  {
+    "id": "notebook",
+    "alias": "test-server-01",
+    "mode": "SLEEP",
+    "sleep_interval": 300,
+    "jitter": 25,
+    "last_seen": "2026-01-09T23:04:06.815427207+07:00",
+    "first_seen": "2026-01-09T23:03:06.269610151+07:00",
+    "ip": "127.0.0.1"
+  }
+]

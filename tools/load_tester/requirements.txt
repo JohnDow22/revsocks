@@ -1,0 +1,7 @@
+# Зависимости для load_tester
+
+# HTTP клиент с поддержкой SOCKS5
+requests>=2.31.0
+
+# SOCKS5 прокси support для requests
+PySocks>=1.7.1
