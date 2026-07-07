@@ -85,9 +85,9 @@ func main() {
 	flag.BoolVar(&opts.usetls, "tls", false, "use TLS for connection")
 	flag.BoolVar(&opts.usewebsocket, "ws", false, "use websocket for connection")
 
-	// Yamux tuning
+	// Yamux tuning (write timeout 300s — было 10s, рвало tunnel под нагрузкой)
 	flag.IntVar(&opts.yamuxKeepalive, "yamux-keepalive", 30, "yamux keepalive interval in seconds")
-	flag.IntVar(&opts.yamuxTimeout, "yamux-timeout", 10, "yamux write timeout in seconds")
+	flag.IntVar(&opts.yamuxTimeout, "yamux-timeout", 300, "yamux write timeout in seconds")
 
 	// DNS mode
 	flag.StringVar(&opts.dnslisten, "dnslisten", "", "Where should DNS server listen")

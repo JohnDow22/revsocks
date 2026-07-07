@@ -25,8 +25,10 @@ type YamuxSettings struct {
 func DefaultYamuxSettings() *YamuxSettings {
 	return &YamuxSettings{
 		KeepAliveInterval: 30 * time.Second,
-		WriteTimeout:      10 * time.Second,
-		EnableKeepAlive:   true,
+		// ConnectionWriteTimeout: было 10s — рвало long-lived tunnel под нагрузкой
+		// (та же проблема что ligolo-ng: write stall → EOF на 10s). Поднято до 300s.
+		WriteTimeout:    300 * time.Second,
+		EnableKeepAlive: true,
 	}
 }
 

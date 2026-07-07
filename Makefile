@@ -24,6 +24,18 @@ static: dep
 	CGO_ENABLED=0 go build $(STATIC_OPTIONS) -o revsocks-server ./cmd/server
 
 # ========================================
+# Havoc DllSpawn — c-shared DLL (args из lpvReserved, как ligolo-ng)
+# ========================================
+# DllMain (cmd/agent/havoc_dll.go) читает base64 args из lpvReserved → mainImpl().
+# Сборка под windows/amd64, mingw-w64. -ldflags -s -w для strip (~5-7MB).
+agent-dll: dep
+	mkdir -p dist
+	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc \
+		go build -buildmode=c-shared -ldflags "-s -w -X github.com/kost/revsocks/internal/common.Version=$(VERSION)-dll -X github.com/kost/revsocks/internal/common.CommitID=$(GIT_COMMIT)" \
+		-o dist/revsocks-agent.dll ./cmd/agent
+	@ls -lh dist/revsocks-agent.dll dist/revsocks-agent.h 2>/dev/null || true
+
+# ========================================
 # Legacy: Single binary (for compatibility)
 # ========================================
 revsocks: dep
@@ -134,4 +146,4 @@ test:
 test-e2e:
 	go test -v ./tests/e2e/...
 
-.PHONY: default agent server static revsocks dep tools ver gittag clean dist gox gox-agent gox-server goxwin goxwin-agent goxwin-server dokbuild draft stealth stealth-test stealth-clean stealth-help test test-e2e
+.PHONY: default agent server static agent-dll revsocks dep tools ver gittag clean dist gox gox-agent gox-server goxwin goxwin-agent goxwin-server dokbuild draft stealth stealth-test stealth-clean stealth-help test test-e2e
