@@ -23,10 +23,10 @@ DONE
 - soks.py фикс: `--ws` режим теперь prepend `wss://` (Go url.Parse требует схему, иначе "first path segment cannot contain colon"). commit HavoX `d36781b`.
 
 **Грабли:**
-- Demon debug EXE на NoAV через DIRECTCF transport — НЕ работает (`WinHttpSendRequest error 5023`, падает). Подняли через **P53 WAKE** (живой демон e55ce801 от юзера).
-- demon DLL через rundll32 — умирает (SHELLCODE build, DllMain не персистентный при обычной загрузке). Нужен EXE или P53-raised.
+- Demon debug EXE на NoAV через DIRECTCF transport — НЕ работает (`WinHttpSendRequest error 5023`, падает). Demon DLL через rundll32 — умирает (SHELLCODE build, DllMain не персистентный при обычной загрузке). **Правильный путь подъёма демона: P53 adminka TUI `ss <N>` → `cmd demon_debug`** (бот DESKTOP-A1G4TVH) → WAKE key2 → watcher грузит debug demon → живой демон в HavoX (~7-15 мин). См. memory `feedback_demon_via_p53`. НЕ собирать/деплоить demon EXE/DLL на VM напрямую.
 - WS режим: `-connect host:port` без схемы → Go url.Parse fail. soks.py теперь добавляет wss://.
 - :1080 socks listener — **lazy** (поднимается только после первого agent connect). test_revsocks не проверяет :1080.
+- Agent лог ERR на unreachable targets (IPv6 :80 заблок на NoAV egress, WinRM :5985 выкл) — это НЕ socks-проблема, `Accepted stream` = работает. Проверять socks на target который точно отвечает (HTTP сервер).
 
 **осталось:** —
 
