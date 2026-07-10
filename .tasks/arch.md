@@ -109,3 +109,14 @@ curl -x socks5://127.0.0.1:1080 https://target   # traffic → agent → target
 - Config: `config/revsocks.yaml` (+ `revsocks_dev.yaml`).
 - Docs: `docs/` (CHANGELOG, Features, Bugfixes).
 - Build: `Makefile`, `build.sh`, `tools/confgen` (baked.go generator).
+
+## HavoX UI интеграция (как ligolo) — задача 004
+revsocks в HavoX UI: оператор вбивает host:port socks-сервера (+pass/tls/ws) в панели → TS_Config → команда `revsocks_start` (без args) берёт конфиг из DB. revsocks **без CF** (прямой TCP+TLS+WS).
+- **HavoX** (commit `7c22499`): `client/app/src/components/RevsocksPanel.jsx` (modal) + AppHeader кнопка. `sse_router.py` `/revsocks/config` GET/POST. `modules/soks/soks.py`: `revsocks_start` (DB config) + `revsocks_info`; `socks` — manual alias.
+- **DB миграция idempotent** (deploy `2bc7878`): `lib/havox.sh setup_havox` → `INSERT OR IGNORE INTO TS_Config` (ligolo_direct_hostport/wss + revsocks_hostport/password/tls/ws). defaults из config.env. key есть от UI-save → не трогается.
+- **recon**: `lib/revsocks.sh` (deploy product, work:2 revsocks link), `REVSOCKS_HOSTPORT=185.224.132.148:443`, `REVSOCKS_PASS=3870acd6...`.
+- **OPS server на 162.252.199.92** (deploy `1b0c7ed`): `ops/modules/revsocks_direct.sh` (build локально make server + scp на 162 + tmux `revsocks`). `ops/deploy.sh ops revsocks_direct`. `REVSOCKS_HOSTPORT=162.252.199.92:443` (OPS per-env pass).
+- **Тест PASS** (демон e55ce801): `revsocks_start` → DB config → CMD TUNNEL → agent online. SOCKS5: `curl -x socks5://127.0.0.1:1080 http://...` → traffic через agent, 0 yamux drop.
+
+**Грабли:** WS режим требует `wss://` схему (soks.py добавляет auto); `:1080` socks listener lazy (после agent connect); recon демоны часто stale — свежий через P53 `cmd demon_debug`.
+
